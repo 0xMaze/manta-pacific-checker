@@ -40,8 +40,8 @@ impl WalletItem {
         self.eligible = is_eligible
     }
 
-    pub fn get_eligibility_checked(&self) -> bool {
-        self.eligibility_checked
+    pub fn get_eligibility_checked(&self) -> &bool {
+        &self.eligibility_checked
     }
 
     pub fn set_eligibility_checked(&mut self) {

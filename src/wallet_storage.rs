@@ -3,8 +3,6 @@ use std::io::{BufRead, BufReader, BufWriter, Write};
 
 use crate::checker::Checker;
 use crate::wallet_item::WalletItem;
-use ethers::core::rand;
-use ethers::core::rand::prelude::SliceRandom;
 use itertools::{EitherOrBoth::*, Itertools};
 use log::info;
 use serde::{Deserialize, Serialize};
@@ -30,10 +28,12 @@ impl WalletStorage {
     }
 
     pub fn get_unchecked_wallet(&mut self) -> Option<&mut WalletItem> {
-        let mut rng = rand::thread_rng();
-        self.storage
-            .choose_mut(&mut rng)
-            .filter(|wallet| !wallet.get_eligibility_checked())
+        for wallet_item in &mut self.storage {
+            if !wallet_item.get_eligibility_checked() {
+                return Some(wallet_item);
+            }
+        }
+        None
     }
 
     fn has_unchecked_wallets(&self) -> bool {
